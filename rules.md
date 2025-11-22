@@ -109,12 +109,62 @@ project(poc): implementa POC de autenticação com Entra ID
 fix(snippet): corrige exemplo de retry com Polly
 ```
 
+### Processo de Commit e Push
+
+**IMPORTANTE**: A IA deve sempre seguir este processo ao fazer commits:
+
+1. **Sugerir mensagem de commit**
+   - Antes de fazer qualquer commit, a IA deve propor uma mensagem de commit
+   - A mensagem deve seguir o formato Conventional Commits
+   - Deve ser clara, organizada e adequada às mudanças realizadas
+
+2. **Solicitar aprovação**
+   - Após sugerir a mensagem, a IA deve perguntar explicitamente:
+     - "Posso fazer o commit e push com esta mensagem?"
+     - Ou similar, deixando claro que precisa de aprovação
+
+3. **Aguardar confirmação**
+   - A IA **NUNCA** deve fazer commit e push sem aprovação explícita do usuário
+   - Apenas após receber confirmação positiva (ex: "sim", "pode", "ok", "faça") é que deve proceder
+
+4. **Executar após aprovação**
+   - Com a aprovação recebida, então fazer:
+     - `git add` dos arquivos modificados
+     - `git commit` com a mensagem aprovada
+     - `git push` para o repositório remoto
+
+### Formato de Mensagens de Commit
+
+As mensagens de commit devem ser:
+
+- **Organizadas**: Usar bullet list quando houver múltiplas mudanças relacionadas
+- **Claras**: Descrever o que foi feito de forma objetiva
+- **Concisas**: Evitar ser muito extensas, mas incluir informações relevantes
+- **Estruturadas**: Seguir o padrão Conventional Commits
+
+#### Exemplo de Mensagem com Bullet List
+
+```
+feat(learning): adiciona estudo sobre Azure Functions
+
+- Adiciona documentação sobre triggers e bindings
+- Inclui exemplos práticos de HTTP e Timer triggers
+- Adiciona referências à documentação oficial
+```
+
+#### Exemplo de Mensagem Simples
+
+```
+docs(rules): atualiza regras de commit e push
+```
+
 ### Regras Adicionais de Commit
 
 - **Mensagens em português**: Descreva em português brasileiro
 - **Descrição curta**: Máximo 72 caracteres na primeira linha
-- **Corpo opcional**: Use para explicar o "porquê" quando necessário
+- **Corpo opcional**: Use bullet list para organizar múltiplas mudanças relacionadas
 - **Um commit por mudança lógica**: Não misture múltiplas mudanças não relacionadas
+- **Sempre solicitar aprovação**: Nunca fazer commit/push sem confirmação do usuário
 
 ## 💻 Padrões de Código .NET
 
@@ -341,6 +391,7 @@ Ao criar uma nova tarefa de aprendizado:
 2. **Sugerir testes práticos**: Quando possível, indicar lista compacta de testes no Swagger ou ferramentas apropriadas
 3. **Seguir arquivos .md**: Sempre ler e seguir orientações em README.md e rules.md
 4. **Atualizar documentação**: Ao finalizar trabalho, atualizar README ou rules.md se necessário
+5. **Sempre solicitar aprovação para commits**: Nunca fazer commit e push sem aprovação explícita do usuário (ver seção "Processo de Commit e Push")
 
 ## 📖 Recursos de Referência
 
@@ -358,4 +409,5 @@ Ao criar uma nova tarefa de aprendizado:
 ## 📝 Histórico de Atualizações
 
 - **2025-11-22**: Adicionada seção sobre regras para criar atividades no GitHub Project Board
+- **2025-11-22**: Adicionado processo de commit e push com aprovação obrigatória e formato de mensagens
 
