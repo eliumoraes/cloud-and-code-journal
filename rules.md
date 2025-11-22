@@ -224,6 +224,117 @@ Descrição do problema.
 - **Adicionar regras conforme surgem**: Quando padrões novos são estabelecidos, documentar aqui
 - **Revisar periodicamente**: Manter regras atualizadas e relevantes
 
+## 📋 Regras para Criar Atividades no GitHub Project Board
+
+### Ao Criar uma Nova Issue/Tarefa
+
+Quando criar uma nova issue (usando os templates ou manualmente), sempre configure os seguintes campos no Project Board:
+
+#### Campos Obrigatórios
+
+1. **Assignee (Responsável)**
+   - **Sempre**: Atribuir para você mesmo (@me)
+   - Isso garante que a tarefa apareça em "My Work" quando estiver em progresso
+   - Como fazer: Ao criar a issue, já atribua para você, ou depois vá no board e configure
+
+2. **Status**
+   - Escolha um dos valores:
+     - `To do`: Tarefa planejada, mas ainda não iniciada
+     - `In progress`: Tarefa em andamento (aparece em "My Work")
+     - `Blocked`: Tarefa bloqueada por alguma dependência
+     - `Done`: Tarefa concluída (aparece em "Done")
+   - **Padrão inicial**: `To do` (para novas tarefas)
+
+3. **Priority**
+   - Escolha um dos valores:
+     - `High`: Prioridade alta, tarefas importantes e urgentes
+     - `Medium`: Prioridade média, tarefas importantes mas não urgentes
+     - `Low`: Prioridade baixa, tarefas que podem esperar
+   - **Como decidir**:
+     - High: Aprendizados críticos, projetos principais, deadlines importantes
+     - Medium: Estudos complementares, desafios intermediários
+     - Low: Tarefas opcionais, melhorias, journal entries
+
+4. **Sprint**
+   - Digite a semana atual no formato: `Week 1`, `Week 2`, `Week 3`, etc.
+   - Use para agrupar tarefas por semana
+   - **Padrão**: Semana atual do planejamento
+
+5. **Labels**
+   - Aplique a label apropriada conforme o tipo de tarefa:
+     - `learning`: Para estudos e aprendizado
+     - `challenge`: Para exercícios (Exercism, Codewars, etc.)
+     - `project`: Para POCs e projetos reais
+     - `journal`: Para entradas semanais no journal
+     - `feature`: Para features e funcionalidades
+
+### Fluxo de Configuração no Board
+
+1. **Criar a Issue**
+   - Use os templates disponíveis em `.github/ISSUE_TEMPLATE/`
+   - Preencha todas as informações solicitadas no template
+
+2. **Configurar no Project Board**
+   - Acesse o Project Board
+   - Encontre a issue recém-criada
+   - Configure os campos:
+     - Clique no card da issue
+     - Ou use o menu (três pontinhos) → "Edit fields"
+   - Preencha:
+     - Assignee: @me (você mesmo)
+     - Status: To do (ou In progress se já começou)
+     - Priority: High/Medium/Low (conforme importância)
+     - Sprint: Week X (semana atual)
+     - Labels: já devem estar aplicadas pelo template
+
+3. **Mover para a View Apropriada**
+   - A issue aparecerá automaticamente nas views baseadas nos filtros:
+     - **My Work**: Se `assignee:@me` E `status:In progress`
+     - **Backlog**: Se `status:To do`
+     - **Learning**: Se `label:learning`
+     - **Done**: Se `status:Done`
+
+### Checklist ao Criar Nova Tarefa
+
+- [ ] Issue criada usando template apropriado
+- [ ] Assignee configurado como @me
+- [ ] Status definido (To do / In progress / Blocked / Done)
+- [ ] Priority definida (High / Medium / Low)
+- [ ] Sprint definida (Week X)
+- [ ] Label apropriada aplicada
+- [ ] Campos configurados no Project Board
+- [ ] Issue aparece na view correta
+
+### Dicas Importantes
+
+- **Sempre atribua para você**: Isso garante que você veja suas tarefas em "My Work"
+- **Use Priority consistentemente**: Facilita ordenação no Backlog
+- **Atualize Status regularmente**: Mantém o board atualizado e mostra progresso real
+- **Use Sprint para planejamento**: Agrupa tarefas por semana para facilitar revisão
+- **Labels são importantes**: Permitem filtrar por tipo de atividade (Learning, Challenge, etc.)
+
+### Exemplo Prático
+
+Ao criar uma nova tarefa de aprendizado:
+
+1. Criar issue usando template `learning-task.md`
+2. Preencher informações do aprendizado
+3. No board, configurar:
+   - Assignee: @me ✅
+   - Status: To do ✅
+   - Priority: High (se for aprendizado crítico) ✅
+   - Sprint: Week 1 ✅
+   - Label: learning (já aplicada pelo template) ✅
+4. A issue aparecerá em:
+   - Backlog (porque Status = To do)
+   - Learning (porque Label = learning)
+5. Quando começar a trabalhar:
+   - Mude Status para "In progress"
+   - A issue aparecerá em "My Work"
+6. Quando terminar:
+   - Mude Status para "Done"
+   - A issue aparecerá em "Done"
+
 ## ⚠️ Regras Importantes
 
 1. **Nunca assumir que algo está finalizado**: Sempre indicar quando objetivos foram concluídos e pedir verificação
@@ -241,4 +352,10 @@ Descrição do problema.
 ---
 
 **Última atualização**: 2025-11-22
+
+---
+
+## 📝 Histórico de Atualizações
+
+- **2025-11-22**: Adicionada seção sobre regras para criar atividades no GitHub Project Board
 
