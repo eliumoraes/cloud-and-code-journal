@@ -1,0 +1,193 @@
+# Template: Script para atualizar campos Priority e Sprint no GitHub Project Board
+# Usa GraphQL API do GitHub Projects v2
+# 
+# ⚠️ ESTE É UM TEMPLATE - ADAPTE ANTES DE USAR
+# 
+# Uso: 
+# 1. Copie este arquivo para update-project-fields.ps1
+# 2. Configure os IDs do projeto e campos abaixo
+# 3. Adicione suas issues no mapeamento $issuesConfig
+# 4. Obtenha os itemIds das issues e adicione em $issueItemIds
+# 5. Execute: .\scripts\update-project-fields.ps1
+# 
+# Requisitos:
+# - Token do GitHub em .secrets/github-token.txt (primeira linha) com permissões: read:project, write:project
+# - GitHub CLI (gh) instalado e autenticado
+
+# ============================================================================
+# CONFIGURAÇÃO - ADAPTE ESTES VALORES
+# ============================================================================
+
+# Carregar token do arquivo (primeira linha do arquivo)
+$tokenPath = ".secrets\github-token.txt"
+if (Test-Path $tokenPath) {
+    $token = (Get-Content $tokenPath -First 1).Trim()
+    if ($token -and $token -match '^ghp_') {
+        $env:GH_TOKEN = $token
+        Write-Host "✓ Token carregado do arquivo" -ForegroundColor Green
+    } else {
+        Write-Host "⚠️  Token não encontrado na primeira linha do arquivo" -ForegroundColor Yellow
+        Write-Host "O token deve estar na primeira linha do arquivo, começando com 'ghp_'" -ForegroundColor Yellow
+        exit 1
+    }
+} else {
+    Write-Host "⚠️  Arquivo de token não encontrado: $tokenPath" -ForegroundColor Yellow
+    Write-Host "Crie o arquivo .secrets/github-token.txt com seu token do GitHub na primeira linha" -ForegroundColor Yellow
+    exit 1
+}
+
+# IDs do Projeto e Campos - OBTENHA VIA GraphQL (veja instruções no rules.md)
+$projectId = "SEU_PROJECT_ID_AQUI"  # Exemplo: "PVT_kwHOASlIzM4BI0d-"
+$priorityFieldId = "SEU_PRIORITY_FIELD_ID_AQUI"  # Exemplo: "PVTSSF_lAHOASlIzM4BI0d-zg5KumI"
+$sprintFieldId = "SEU_SPRINT_FIELD_ID_AQUI"  # Exemplo: "PVTF_lAHOASlIzM4BI0d-zg5KurQ"
+
+# Mapeamento de Priority IDs - OBTENHA VIA GraphQL (veja instruções no rules.md)
+$priorityIds = @{
+    "Low" = "ID_LOW_AQUI"      # Exemplo: "3ef78ad9"
+    "Medium" = "ID_MEDIUM_AQUI"  # Exemplo: "12352b70"
+    "High" = "ID_HIGH_AQUI"     # Exemplo: "bf4198d7"
+}
+
+# ============================================================================
+# MAPEAMENTO DE ISSUES - ADICIONE SUAS ISSUES AQUI
+# ============================================================================
+
+# Mapeamento de issues por número com Priority e Sprint
+# Formato: IssueNumber = @{Priority="High|Medium|Low"; Sprint="Week 1|2|3|4"}
+$issuesConfig = @{
+    # Exemplo:
+    # 1 = @{Priority="High"; Sprint="Week 1"}
+    # 2 = @{Priority="Medium"; Sprint="Week 2"}
+    # Adicione suas issues aqui...
+}
+
+# Mapeamento de issue numbers para project item IDs
+# OBTENHA VIA GraphQL (veja instruções no rules.md)
+# Formato: IssueNumber = "ITEM_ID"
+$issueItemIds = @{
+    # Exemplo:
+    # 1 = "PVTI_lAHOASlIzM4BI0d-zghl14w"
+    # 2 = "PVTI_lAHOASlIzM4BI0d-zghl140"
+    # Adicione os itemIds das suas issues aqui...
+}
+
+# ============================================================================
+# EXECUÇÃO - NÃO MODIFICAR A PARTIR DAQUI
+# ============================================================================
+
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "Atualizando campos Priority e Sprint" -ForegroundColor Cyan
+Write-Host "Total de issues: $($issuesConfig.Count)" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+if ($issuesConfig.Count -eq 0) {
+    Write-Host "⚠️  Nenhuma issue configurada. Adicione issues no mapeamento `$issuesConfig" -ForegroundColor Yellow
+    exit 1
+}
+
+$successCount = 0
+$errorCount = 0
+
+foreach ($issueNumber in $issuesConfig.Keys | Sort-Object) {
+    $config = $issuesConfig[$issueNumber]
+    $itemId = $issueItemIds[$issueNumber]
+    $priorityValue = $config.Priority
+    $sprintValue = $config.Sprint
+    $priorityOptionId = $priorityIds[$priorityValue]
+    
+    if (-not $itemId) {
+        Write-Host "⚠️  Issue #$issueNumber não encontrada no projeto (itemId ausente)" -ForegroundColor Yellow
+        $errorCount++
+        continue
+    }
+    
+    if (-not $priorityOptionId) {
+        Write-Host "⚠️  Issue #$issueNumber - Priority '$priorityValue' não encontrada no mapeamento" -ForegroundColor Yellow
+        $errorCount++
+        continue
+    }
+    
+    Write-Host "Atualizando Issue #$issueNumber - Priority: $priorityValue, Sprint: $sprintValue" -ForegroundColor Gray
+    
+    # Atualizar Priority (Single Select)
+    $priorityMutation = @"
+mutation {
+    updateProjectV2ItemFieldValue(
+        input: {
+            projectId: "$projectId"
+            itemId: "$itemId"
+            fieldId: "$priorityFieldId"
+            value: {
+                singleSelectOptionId: "$priorityOptionId"
+            }
+        }
+    ) {
+        projectV2Item {
+            id
+        }
+    }
+}
+"@
+    
+    try {
+        $result = gh api graphql -f query=$priorityMutation 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "  ✓ Priority atualizado" -ForegroundColor Green
+        } else {
+            Write-Host "  ✗ Erro ao atualizar Priority: $result" -ForegroundColor Red
+            $errorCount++
+            continue
+        }
+    } catch {
+        Write-Host "  ✗ Erro ao atualizar Priority: $_" -ForegroundColor Red
+        $errorCount++
+        continue
+    }
+    
+    # Atualizar Sprint (Text)
+    $sprintMutation = @"
+mutation {
+    updateProjectV2ItemFieldValue(
+        input: {
+            projectId: "$projectId"
+            itemId: "$itemId"
+            fieldId: "$sprintFieldId"
+            value: {
+                text: "$sprintValue"
+            }
+        }
+    ) {
+        projectV2Item {
+            id
+        }
+    }
+}
+"@
+    
+    try {
+        $result = gh api graphql -f query=$sprintMutation 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "  ✓ Sprint atualizado" -ForegroundColor Green
+            $successCount++
+        } else {
+            Write-Host "  ✗ Erro ao atualizar Sprint: $result" -ForegroundColor Red
+            $errorCount++
+        }
+    } catch {
+        Write-Host "  ✗ Erro ao atualizar Sprint: $_" -ForegroundColor Red
+        $errorCount++
+    }
+    
+    Write-Host ""
+    
+    # Pequeno delay para não sobrecarregar a API
+    Start-Sleep -Milliseconds 200
+}
+
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "Resumo:" -ForegroundColor Cyan
+Write-Host "  ✓ Sucesso: $successCount issues" -ForegroundColor Green
+Write-Host "  ✗ Erros: $errorCount issues" -ForegroundColor $(if ($errorCount -gt 0) { "Red" } else { "Green" })
+Write-Host "========================================" -ForegroundColor Cyan
+
