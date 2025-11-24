@@ -1,7 +1,7 @@
 ---
 name: Journal Entry
 about: Template para entrada semanal no journal
-title: '[JOURNAL] Semana [N] - [Data]'
+title: '[Data Inicial] a [Data Final]'
 labels: journal
 assignees: ''
 

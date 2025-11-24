@@ -1,7 +1,7 @@
 ---
 name: Project Task
 about: Template para POCs e projetos reais
-title: '[PROJECT] '
+title: ''
 labels: project
 assignees: ''
 

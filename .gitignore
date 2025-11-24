@@ -1,0 +1,40 @@
+# Secrets e informações sensíveis
+.secrets/
+secrets/
+
+# Arquivos de token e credenciais
+*.token
+*.key
+*.secret
+*.env.local
+.env
+
+# Arquivos temporários
+temp_*.md
+*.tmp
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Arquivos compilados
+*.dll
+*.exe
+*.pdb
+bin/
+obj/
+
+# Arquivos de build
+build/
+dist/
+

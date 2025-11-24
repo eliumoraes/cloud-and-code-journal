@@ -280,6 +280,24 @@ Descrição do problema.
 
 Quando criar uma nova issue (usando os templates ou manualmente), sempre configure os seguintes campos no Project Board:
 
+#### Nomenclatura de Títulos
+
+- **NÃO inclua prefixos no título**: Não use `[LEARNING]`, `[CHALLENGE]`, `[PROJECT]`, `[JOURNAL]` no título
+- **NÃO inclua número da semana**: Não use `Semana X` ou `Week X` no título - essa informação vai no campo Sprint
+- **Use apenas o título descritivo**: O label já identifica o tipo visualmente no board, e o Sprint identifica a semana
+- **Exemplos corretos**:
+  - ✅ "Auto-avaliação Técnica .NET e Azure"
+  - ✅ "Exercism - TwoFer"
+  - ✅ "POC: Azure App Service + API REST"
+  - ✅ "Baseline" (para journal - a semana está no Sprint)
+  - ✅ "18/11/2025 a 24/11/2025" (para journal com datas)
+- **Exemplos incorretos**:
+  - ❌ "[LEARNING] Auto-avaliação Técnica .NET e Azure"
+  - ❌ "[CHALLENGE] Exercism - TwoFer"
+  - ❌ "[PROJECT] POC: Azure App Service + API REST"
+  - ❌ "Semana 1 - Baseline" (use apenas "Baseline" e configure Sprint = Week 1)
+  - ❌ "Week 2 - Fundamentos" (use apenas "Fundamentos" e configure Sprint = Week 2)
+
 #### Campos Obrigatórios
 
 1. **Assignee (Responsável)**
@@ -317,6 +335,7 @@ Quando criar uma nova issue (usando os templates ou manualmente), sempre configu
      - `project`: Para POCs e projetos reais
      - `journal`: Para entradas semanais no journal
      - `feature`: Para features e funcionalidades
+   - **IMPORTANTE**: Não inclua o tipo da tarefa no título da issue (ex: `[LEARNING]`, `[CHALLENGE]`). O label já identifica o tipo visualmente no board. Use apenas o título descritivo da tarefa.
 
 ### Fluxo de Configuração no Board
 
@@ -385,6 +404,58 @@ Ao criar uma nova tarefa de aprendizado:
    - Mude Status para "Done"
    - A issue aparecerá em "Done"
 
+## 📅 Regras de Data
+
+### Como Identificar Data Atual
+
+**Sempre verificar a data atual antes de criar ou atualizar arquivos com datas:**
+
+```powershell
+# Comando para obter data atual no formato padrão
+Get-Date -Format "yyyy-MM-dd"
+```
+
+**Formato padrão**: `yyyy-MM-dd` (exemplo: 2025-11-24)
+
+### Quando Usar Datas
+
+- **Data de criação**: Data atual quando o arquivo é criado
+- **Data de atualização**: Data atual quando o arquivo é modificado
+- **Datas em journal**: Usar datas reais da semana correspondente
+- **Datas em issues**: Usar datas reais do período da semana
+
+**⚠️ IMPORTANTE**: Nunca usar datas futuras ou datas incorretas. Sempre verificar com `Get-Date` antes de escrever datas.
+
+## 🔐 Segurança e Tokens
+
+### Token do GitHub
+
+O token de acesso pessoal do GitHub está armazenado em:
+- **Localização**: `.secrets/github-token.txt`
+- **⚠️ IMPORTANTE**: Esta pasta está no `.gitignore` e **NÃO será commitada**
+- **Uso**: Para configurar campos no GitHub Project Board via API
+- **Renovação**: Quando necessário, atualize o arquivo `.secrets/github-token.txt`
+
+### Como Usar o Token
+
+```powershell
+# Ler token do arquivo e configurar
+$token = Get-Content .secrets\github-token.txt | Select-String -Pattern '^ghp_' | ForEach-Object { $_.Line }
+$env:GH_TOKEN = $token
+gh auth status
+```
+
+### Segurança
+
+- ✅ Nunca commite arquivos da pasta `.secrets/`
+- ✅ Revogue tokens comprometidos imediatamente
+- ✅ Use tokens com expiração
+- ✅ Não compartilhe tokens publicamente
+
+**Links úteis**:
+- Gerenciar tokens: https://github.com/settings/tokens
+- Criar novo token: https://github.com/settings/tokens/new
+
 ## ⚠️ Regras Importantes
 
 1. **Nunca assumir que algo está finalizado**: Sempre indicar quando objetivos foram concluídos e pedir verificação
@@ -392,6 +463,7 @@ Ao criar uma nova tarefa de aprendizado:
 3. **Seguir arquivos .md**: Sempre ler e seguir orientações em README.md e rules.md
 4. **Atualizar documentação**: Ao finalizar trabalho, atualizar README ou rules.md se necessário
 5. **Sempre solicitar aprovação para commits**: Nunca fazer commit e push sem aprovação explícita do usuário (ver seção "Processo de Commit e Push")
+6. **Proteger informações sensíveis**: Nunca commitar tokens, senhas ou informações privadas (usar pasta `.secrets/`)
 
 ## 📖 Recursos de Referência
 
@@ -402,7 +474,7 @@ Ao criar uma nova tarefa de aprendizado:
 
 ---
 
-**Última atualização**: 2025-11-22
+**Última atualização**: 2025-11-24
 
 ---
 
@@ -410,4 +482,5 @@ Ao criar uma nova tarefa de aprendizado:
 
 - **2025-11-22**: Adicionada seção sobre regras para criar atividades no GitHub Project Board
 - **2025-11-22**: Adicionado processo de commit e push com aprovação obrigatória e formato de mensagens
+- **2025-11-24**: Adicionada regra sobre identificação de data atual e correção de datas incorretas
 

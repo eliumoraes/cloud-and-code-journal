@@ -1,7 +1,7 @@
 ---
 name: Learning Task
 about: Template para tarefas de aprendizado (.NET, Azure, Arquitetura)
-title: '[LEARNING] '
+title: ''
 labels: learning
 assignees: ''
 

@@ -1,7 +1,7 @@
 ---
 name: Challenge Task
 about: Template para desafios do Exercism, Codewars, LeetCode, etc.
-title: '[CHALLENGE] '
+title: ''
 labels: challenge
 assignees: ''
 
