@@ -213,6 +213,63 @@ Get-Date -Format "yyyy-MM-dd"
 
 ## 📋 Regras para GitHub Project Board
 
+### 👁️ Visualizar Issue/Atividade
+
+**Quando o usuário pedir para visualizar uma atividade/issue, a IA deve:**
+
+1. **Identificar a issue solicitada:**
+   - Por número: `#8`, `issue 8`, `atividade 8`
+   - Por título: buscar por palavras-chave no título
+   - Por contexto: Sprint, Priority, Status, Label
+
+2. **Usar GitHub CLI para visualizar:**
+   ```powershell
+   # Visualizar issue por número
+   gh issue view <número> --json number,title,body,labels,state,assignees
+   
+   # Visualizar issue com todos os campos
+   gh issue view <número> --json number,title,body,labels,state,assignees,createdAt,updatedAt
+   
+   # Listar issues com filtros
+   gh issue list --state open --json number,title,labels,state
+   ```
+
+3. **Apresentar informações de forma organizada:**
+   - Número e título da issue
+   - Status atual (To do, In progress, Blocked, Done)
+   - Priority (High, Medium, Low)
+   - Sprint (Week 1, 2, 3, 4)
+   - Labels aplicadas
+   - Assignee
+   - Data de criação
+   - Conteúdo do body (resumido se muito longo)
+   - Links relevantes (se houver)
+
+4. **Verificar campos no Project Board:**
+   - Se o usuário pedir para verificar campos, mencionar que Priority, Sprint, Status e Labels são FIELDS no Project Board
+   - Os campos no body são apenas documentação
+   - Para verificar campos reais, usar: `gh api graphql` ou verificar no board manualmente
+
+5. **Formato de apresentação sugerido:**
+   ```markdown
+   ## Issue #<número>: <título>
+   
+   **Status**: <status>
+   **Priority**: <priority>
+   **Sprint**: <sprint>
+   **Labels**: <labels>
+   **Assignee**: <assignee>
+   **Data de Criação**: <data>
+   
+   ### Conteúdo:
+   [resumo ou conteúdo completo do body]
+   ```
+
+**Exemplo de comando completo:**
+```powershell
+gh issue view 8 --json number,title,body,labels,state,assignees,createdAt,updatedAt | ConvertFrom-Json | Format-List
+```
+
 ### ⚡ Resumo Rápido: Campos Obrigatórios
 
 **TODAS as issues DEVEM ter estes FIELDS configurados NO PROJECT BOARD:**
@@ -527,6 +584,7 @@ ghp_SEU_TOKEN_AQUI
 - **2025-11-24**: Esclarecido que Priority, Status, Labels e Sprint são FIELDS no Project Board (não apenas no body)
 - **2025-11-24**: Adicionada regra para identificar Week atual ao criar nova atividade e reorganizar conforme necessário
 - **2025-11-24**: Adicionada seção sobre como atualizar fields do Project Board via CLI usando script PowerShell
+- **2025-11-24**: Adicionada seção sobre como visualizar issues/atividades quando solicitado pelo usuário
 
 ---
 
