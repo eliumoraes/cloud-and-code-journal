@@ -2,7 +2,7 @@
 
 Este arquivo contém as regras e diretrizes que a IA deve seguir ao ajudar neste repositório.
 
-**Última atualização**: 2025-11-24
+**Última atualização**: 2025-11-29
 
 ---
 
@@ -95,6 +95,50 @@ Get-Date -Format "yyyy-MM-dd"
 - **Direto e objetivo**: Seja claro e evite rodeios
 - **Construtivo**: Sempre ofereça soluções práticas e acionáveis
 - **Focado em aprendizado**: Priorize explicações que ajudem no crescimento técnico
+
+### Estilo de Narração (PREFERIDO pelo Usuário)
+
+**⚠️ IMPORTANTE**: O usuário prefere um estilo de narração descritivo e didático que facilita a compreensão. Use este estilo **de vez em quando**, especialmente ao explicar código de testes, mocks, e configurações.
+
+**Exemplos do estilo preferido:**
+
+**Em Português:**
+- "Configurar mock para que quando chamar ProcessarAsync, retorne..."
+- "Configurar mock para que quando chamar BuscarAsync com 1, retorne..."
+- "Configurar mock para que quando chamar ProcessarAsync com qualquer string, retorne..."
+- "Verificar que BuscarAsync foi chamado com 1 uma vez"
+
+**Em Inglês:**
+- "Setup mock so that when ProcessarAsync is called, return..."
+- "Setup mock so that when BuscarAsync is called with 1, return..."
+- "Setup mock so that when ProcessarAsync is called with any string, return..."
+- "Verify that BuscarAsync was called with 1 once"
+
+**Quando usar:**
+- ✅ Ao explicar código de testes (xUnit, Moq, etc.)
+- ✅ Ao explicar configuração de mocks e stubs
+- ✅ Ao explicar verificações (Verify, Assert, etc.)
+- ✅ Quando o usuário parece confuso sobre o que o código faz
+- ✅ Ao introduzir novos conceitos de teste
+
+**Como usar:**
+- Use frases descritivas que explicam a **intenção** do código
+- Use "para que quando..." ou "so that when..." para conectar ação e resultado
+- Combine com explicações técnicas quando necessário
+- Não precisa usar em TODAS as explicações, mas use **de vez em quando** para facilitar compreensão
+
+**Exemplo completo:**
+```csharp
+mockService
+    .Setup(x => x.ProcessarAsync())
+    .ReturnsAsync("dados");
+```
+
+**Explicação com estilo preferido:**
+> "Configurar mock para que quando chamar ProcessarAsync, retorne 'dados'."
+
+**Explicação técnica (também válida, mas menos preferida):**
+> "Setup do mock que retorna 'dados' quando ProcessarAsync é chamado."
 
 ### Quando Ajudar com Código
 
@@ -190,6 +234,22 @@ Get-Date -Format "yyyy-MM-dd"
 
 ### Arquivos de Aprendizado (`learning/`)
 
+**Estilo de Trabalho Progressivo**: Ao trabalhar em atividades de aprendizado (issues), criar e evoluir documentos progressivamente:
+
+1. **Documento Principal**: Um arquivo principal com o conteúdo técnico (ex: `async-await-introducao.md`)
+2. **Documento de Progresso**: Um arquivo para acompanhar o progresso da atividade (ex: `async-await-progresso.md`)
+   - Registra respostas do usuário
+   - Acompanha status dos tópicos
+   - Documenta dúvidas e resoluções
+   - Lista próximos passos
+
+**Princípio**: Máximo 2-3 documentos por atividade/issue:
+- ✅ Documento principal (conteúdo técnico)
+- ✅ Documento de progresso (acompanhamento)
+- ✅ Documento adicional apenas se necessário (ex: exemplos práticos separados)
+
+**Estrutura sugerida para documento principal:**
+
 ```markdown
 # [Tópico]
 
@@ -200,6 +260,22 @@ Get-Date -Format "yyyy-MM-dd"
 ## Conceitos
 ## Exemplos Práticos
 ## Recursos
+## Próximos Passos
+```
+
+**Estrutura sugerida para documento de progresso:**
+
+```markdown
+# Progresso: [Título da Atividade] (Issue #X)
+
+**Data de Criação**: YYYY-MM-DD
+**Última Atualização**: YYYY-MM-DD
+**Issue**: #X
+
+## Status dos Tópicos
+## Atividades Concluídas
+## Respostas Registradas
+## Dúvidas e Resoluções
 ## Próximos Passos
 ```
 
@@ -352,16 +428,14 @@ gh issue view 8 --json number,title,body,labels,state,assignees,createdAt,update
   ```
 
 #### 3. Configurar Fields no Project Board (CRÍTICO)
-- [ ] Acessar o Project Board no GitHub
-- [ ] Encontrar a issue recém-criada no board
-- [ ] Clicar na issue ou usar menu (três pontinhos) → "Edit fields"
-- [ ] **Label**: Aplicar label diretamente na issue (`learning`, `challenge`, `project`, `journal`, `feature`)
-- [ ] **Priority**: Selecionar no field: `High`, `Medium` ou `Low`
-- [ ] **Sprint**: Digitar no field: `Week 1`, `Week 2`, `Week 3` ou `Week 4`
-- [ ] **Status**: Selecionar no field: `To do` (padrão inicial)
-- [ ] **Assignee**: Configurar como @me
-- [ ] Salvar alterações
-- [ ] **Verificar**: Os fields devem aparecer visualmente nas colunas do board
+**⚠️ A IA deve configurar automaticamente via CLI (veja seção "Configurar Fields via CLI" abaixo)**
+
+- [ ] **Priority**: Configurar via GraphQL mutation (usar IDs fornecidos)
+- [ ] **Sprint**: Configurar via GraphQL mutation (usar IDs fornecidos)
+- [ ] **Status**: Configurar via GraphQL mutation (usar IDs fornecidos)
+- [ ] **Label**: Configurar via `gh issue edit --add-label`
+- [ ] **Assignee**: Configurar via `gh issue edit --add-assignee`
+- [ ] **Verificar**: Confirmar que todos os fields foram configurados corretamente
 
 #### 4. Verificação Final
 - [ ] Confirmar que Label aparece no board
@@ -493,6 +567,183 @@ gh api graphql -f query='query { node(id: "PROJECT_ID") { ... on ProjectV2 { ite
 - Status e Labels devem ser configurados manualmente ou via outros métodos
 - Sempre verificar os resultados no Project Board após executar o script
 
+### 🚀 Configurar Fields via CLI (Método Direto - PREFERIDO)
+
+**A IA deve SEMPRE configurar os fields via CLI ao criar ou editar issues automaticamente.**
+
+#### 📋 IDs do Projeto (Constantes - Não Mudam)
+
+```powershell
+# IDs fixos do projeto "Cloud and Code Journal" - USAR SEMPRE
+$PROJECT_ID = "PVT_kwHOASlIzM4BI0d-"
+$PRIORITY_FIELD_ID = "PVTSSF_lAHOASlIzM4BI0d-zg5KumI"
+$SPRINT_FIELD_ID = "PVTF_lAHOASlIzM4BI0d-zg5KurQ"
+$STATUS_FIELD_ID = "PVTSSF_lAHOASlIzM4BI0d-zg5KteU"
+
+# Priority Options IDs - Mapear conforme Priority desejada
+$PRIORITY_IDS = @{
+    "Low" = "3ef78ad9"
+    "Medium" = "12352b70"
+    "High" = "bf4198d7"
+}
+
+# Status Options IDs - Mapear conforme Status desejado
+$STATUS_IDS = @{
+    "To do" = "f75ad846"
+    "In progress" = "47fc9ee4"
+    "Blocked" = "be9755f8"
+    "Done" = "98236657"
+}
+```
+
+#### 🔧 Processo Genérico: Configurar Fields de Qualquer Issue
+
+**Passo a passo genérico que funciona para qualquer issue:**
+
+1. **Carregar token:**
+   ```powershell
+   $env:GH_TOKEN = (Get-Content .secrets/github-token.txt -First 1).Trim()
+   ```
+
+2. **Obter itemId da issue no projeto:**
+   ```powershell
+   # Substituir $issueNumber pela variável com o número da issue
+   $result = gh api graphql -f query='query { node(id: "PVT_kwHOASlIzM4BI0d-") { ... on ProjectV2 { items(first: 100) { nodes { id content { ... on Issue { number } } } } } } }' | ConvertFrom-Json
+   $itemId = ($result.data.node.items.nodes | Where-Object { $_.content.number -eq $issueNumber }).id
+   ```
+
+3. **Configurar Priority (usar variável $priority):**
+   ```powershell
+   # $priority deve ser: "Low", "Medium" ou "High"
+   $priorityOptionId = $PRIORITY_IDS[$priority]
+   $priorityMutation = "mutation { updateProjectV2ItemFieldValue(input: { projectId: `"PVT_kwHOASlIzM4BI0d-`" itemId: `"$itemId`" fieldId: `"PVTSSF_lAHOASlIzM4BI0d-zg5KumI`" value: { singleSelectOptionId: `"$priorityOptionId`" } }) { projectV2Item { id } } }"
+   gh api graphql -f query=$priorityMutation
+   ```
+
+4. **Configurar Sprint (usar variável $sprint):**
+   ```powershell
+   # $sprint deve ser: "Week 1", "Week 2", "Week 3" ou "Week 4"
+   $sprintMutation = "mutation { updateProjectV2ItemFieldValue(input: { projectId: `"PVT_kwHOASlIzM4BI0d-`" itemId: `"$itemId`" fieldId: `"PVTF_lAHOASlIzM4BI0d-zg5KurQ`" value: { text: `"$sprint`" } }) { projectV2Item { id } } }"
+   gh api graphql -f query=$sprintMutation
+   ```
+
+5. **Configurar Status (usar variável $status):**
+   ```powershell
+   # $status deve ser: "To do", "In progress", "Blocked" ou "Done"
+   $statusOptionId = $STATUS_IDS[$status]
+   $statusMutation = "mutation { updateProjectV2ItemFieldValue(input: { projectId: `"PVT_kwHOASlIzM4BI0d-`" itemId: `"$itemId`" fieldId: `"PVTSSF_lAHOASlIzM4BI0d-zg5KteU`" value: { singleSelectOptionId: `"$statusOptionId`" } }) { projectV2Item { id } } }"
+   gh api graphql -f query=$statusMutation
+   ```
+
+6. **Configurar Label (usar variável $label):**
+   ```powershell
+   # $label deve ser: "learning", "challenge", "project", "journal", "feature"
+   gh issue edit $issueNumber --add-label $label
+   ```
+
+7. **Configurar Assignee:**
+   ```powershell
+   gh issue edit $issueNumber --add-assignee eliumoraes
+   ```
+
+#### 🎯 Como Determinar os Valores das Variáveis
+
+**Ao criar ou editar uma issue, a IA deve determinar:**
+
+- **$issueNumber**: Número da issue (obtido do output de `gh issue create` ou fornecido pelo usuário)
+- **$priority**: Baseado na importância (High/Medium/Low) - verificar no body da issue ou contexto
+- **$sprint**: Baseado na semana planejada (Week 1/2/3/4) - verificar no body da issue ou contexto
+- **$status**: Geralmente "To do" para novas issues, ou conforme contexto para edições
+- **$label**: Baseado no tipo de atividade (learning/challenge/project/journal/feature) - verificar no contexto
+
+#### 📝 Exemplo Genérico: Função Reutilizável
+
+```powershell
+function Set-IssueFields {
+    param(
+        [int]$IssueNumber,
+        [string]$Priority,      # "Low", "Medium", "High"
+        [string]$Sprint,        # "Week 1", "Week 2", "Week 3", "Week 4"
+        [string]$Status,         # "To do", "In progress", "Blocked", "Done"
+        [string]$Label          # "learning", "challenge", "project", "journal", "feature"
+    )
+    
+    # Carregar token
+    $env:GH_TOKEN = (Get-Content .secrets/github-token.txt -First 1).Trim()
+    
+    # IDs constantes
+    $PROJECT_ID = "PVT_kwHOASlIzM4BI0d-"
+    $PRIORITY_FIELD_ID = "PVTSSF_lAHOASlIzM4BI0d-zg5KumI"
+    $SPRINT_FIELD_ID = "PVTF_lAHOASlIzM4BI0d-zg5KurQ"
+    $STATUS_FIELD_ID = "PVTSSF_lAHOASlIzM4BI0d-zg5KteU"
+    
+    $PRIORITY_IDS = @{
+        "Low" = "3ef78ad9"
+        "Medium" = "12352b70"
+        "High" = "bf4198d7"
+    }
+    
+    $STATUS_IDS = @{
+        "To do" = "f75ad846"
+        "In progress" = "47fc9ee4"
+        "Blocked" = "be9755f8"
+        "Done" = "98236657"
+    }
+    
+    # Obter itemId
+    $result = gh api graphql -f query="query { node(id: `"$PROJECT_ID`") { ... on ProjectV2 { items(first: 100) { nodes { id content { ... on Issue { number } } } } } } }" | ConvertFrom-Json
+    $itemId = ($result.data.node.items.nodes | Where-Object { $_.content.number -eq $IssueNumber }).id
+    
+    if (-not $itemId) {
+        Write-Host "Erro: Issue #$IssueNumber não encontrada no projeto" -ForegroundColor Red
+        return
+    }
+    
+    # Configurar Priority
+    $priorityOptionId = $PRIORITY_IDS[$Priority]
+    $priorityMutation = "mutation { updateProjectV2ItemFieldValue(input: { projectId: `"$PROJECT_ID`" itemId: `"$itemId`" fieldId: `"$PRIORITY_FIELD_ID`" value: { singleSelectOptionId: `"$priorityOptionId`" } }) { projectV2Item { id } } }"
+    gh api graphql -f query=$priorityMutation | Out-Null
+    
+    # Configurar Sprint
+    $sprintMutation = "mutation { updateProjectV2ItemFieldValue(input: { projectId: `"$PROJECT_ID`" itemId: `"$itemId`" fieldId: `"$SPRINT_FIELD_ID`" value: { text: `"$Sprint`" } }) { projectV2Item { id } } }"
+    gh api graphql -f query=$sprintMutation | Out-Null
+    
+    # Configurar Status
+    $statusOptionId = $STATUS_IDS[$Status]
+    $statusMutation = "mutation { updateProjectV2ItemFieldValue(input: { projectId: `"$PROJECT_ID`" itemId: `"$itemId`" fieldId: `"$STATUS_FIELD_ID`" value: { singleSelectOptionId: `"$statusOptionId`" } }) { projectV2Item { id } } }"
+    gh api graphql -f query=$statusMutation | Out-Null
+    
+    # Configurar Label
+    gh issue edit $IssueNumber --add-label $Label | Out-Null
+    
+    # Configurar Assignee
+    gh issue edit $IssueNumber --add-assignee eliumoraes | Out-Null
+    
+    Write-Host "✓ Fields configurados para Issue #$IssueNumber" -ForegroundColor Green
+}
+
+# Uso:
+# Set-IssueFields -IssueNumber 42 -Priority "High" -Sprint "Week 1" -Status "To do" -Label "learning"
+```
+
+#### ⚠️ Requisitos
+
+- **Token do GitHub**: Deve estar em `.secrets/github-token.txt` (primeira linha) com permissões `read:project` e `write:project`
+- **GitHub CLI**: Deve estar instalado e autenticado
+- **Token configurado**: `$env:GH_TOKEN` deve ser configurado antes de usar GraphQL
+
+#### 🎯 Regra para a IA
+
+**SEMPRE que criar ou editar uma issue, a IA deve:**
+
+1. ✅ **Determinar os valores** das variáveis ($priority, $sprint, $status, $label) baseado no contexto
+2. ✅ **Obter o número da issue** (do output de `gh issue create` ou fornecido)
+3. ✅ **Obter o itemId** da issue no projeto
+4. ✅ **Configurar todos os fields** via CLI usando os IDs constantes fornecidos
+5. ✅ **Verificar** se os campos foram configurados corretamente
+
+**NÃO deixar para o usuário configurar manualmente no board!**
+
 ### ⚠️ Identificar Week Atual ao Criar Nova Atividade
 
 **IMPORTANTE**: Ao criar nova atividade, SEMPRE identificar qual Week estamos e qual Week faz sentido adicionar:
@@ -585,6 +836,9 @@ ghp_SEU_TOKEN_AQUI
 - **2025-11-24**: Adicionada regra para identificar Week atual ao criar nova atividade e reorganizar conforme necessário
 - **2025-11-24**: Adicionada seção sobre como atualizar fields do Project Board via CLI usando script PowerShell
 - **2025-11-24**: Adicionada seção sobre como visualizar issues/atividades quando solicitado pelo usuário
+- **2025-11-25**: Adicionado estilo de trabalho progressivo com documentos (máximo 2-3 por atividade)
+- **2025-11-28**: Adicionada seção detalhada sobre como configurar fields via CLI automaticamente (método preferido) com IDs constantes e processo genérico reutilizável
+- **2025-11-29**: Adicionado estilo de narração preferido pelo usuário (descrições didáticas com "para que quando..." / "so that when...") para facilitar compreensão, especialmente em explicações de testes e mocks
 
 ---
 
