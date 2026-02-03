@@ -228,6 +228,23 @@ Cada semana deve incluir:
 7. ⏳ Estabelecer rotina semanal (horários fixos)
 8. ⏳ Configurar tracking de métricas
 
+## 🔄 Próximos passos (retomada pós-férias)
+
+**Data**: 2025-02-02
+
+1. **Git**
+   - [ ] Fazer push da branch `feature/retomada-pos-ferias`: `git push -u origin feature/retomada-pos-ferias`
+   - [ ] Fazer merge em `main` (local ou via PR no GitHub) e push de `main`
+2. **Repositório**
+   - [ ] Revisar issues abertas: `gh issue list --state open`
+   - [ ] Alinhar Project Board (Status, Sprint) com o que pretende retomar
+3. **Retomada de estudos**
+   - [ ] Retomar pela Issue #8 (Auto-avaliação Técnica) ou pela próxima atividade em "My Work"
+   - [ ] Continuar projeto async-await-practice se houver issues relacionadas
+4. **Opcional**
+   - [ ] Criar issue "Retomada pós-férias" no board para acompanhar checklist
+   - [ ] Atualizar datas em arquivos de learning tocados na retomada
+
 ## 📚 Recursos e Referências
 
 ### Documentação Oficial
@@ -249,7 +266,7 @@ Cada semana deve incluir:
 
 ---
 
-**Última atualização**: 2025-11-24  
+**Última atualização**: 2025-02-02  
 **Próxima revisão**: Após completar Semana 1
 
 
