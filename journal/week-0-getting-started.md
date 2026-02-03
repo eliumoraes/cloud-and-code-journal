@@ -242,8 +242,18 @@ Cada semana deve incluir:
    - [ ] Retomar pela Issue #8 (Auto-avaliação Técnica) ou pela próxima atividade em "My Work"
    - [ ] Continuar projeto async-await-practice se houver issues relacionadas
 4. **Opcional**
-   - [ ] Criar issue "Retomada pós-férias" no board para acompanhar checklist
+   - [x] Criar issue "Retomada pós-férias" no board para acompanhar checklist → **Issue #39**
    - [ ] Atualizar datas em arquivos de learning tocados na retomada
+
+### Orientação para colar no próximo chat
+
+Copie o bloco abaixo ao iniciar um novo chat para dar contexto e continuar de onde parou:
+
+```
+Repositório: cloud-and-code-journal (estudos .NET/Azure, journal, GitHub Project Board).
+Acabei de retomar após férias: branch feature/retomada-pos-ferias já mergeada em main, push feito.
+Issue de retomada: #39. Próximo passo: retomar estudos (sugestão: Issue #8 Auto-avaliação ou #11 Async/Await) ou alinhar o Project Board e escolher uma tarefa de "My Work". Me oriente no que continuar.
+```
 
 ## 📚 Recursos e Referências
 
