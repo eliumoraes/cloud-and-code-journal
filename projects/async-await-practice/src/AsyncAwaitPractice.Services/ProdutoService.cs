@@ -3,7 +3,7 @@ using AsyncAwaitPractice.Library;
 namespace AsyncAwaitPractice.Services;
 
 /// <summary>
-/// SErviço de produtos que demonstra padrões assíncronos seguros.
+/// Serviço de produtos que demonstra padrões assíncronos seguros.
 /// Este é código de aplicação, não biblioteca, então ConfigureAwait(false) é opecional.
 /// </summary>
 public class ProdutoService : IProdutoService
