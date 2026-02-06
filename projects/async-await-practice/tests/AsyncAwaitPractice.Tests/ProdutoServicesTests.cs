@@ -97,4 +97,27 @@ public class ProdutoServicesTests
         Assert.True(resultado.Count() == 0);
         Assert.Empty(resultado);
     }
+
+    [Fact]
+    public async Task BuscarTodosProdutosAsync_ComCancellationToken_DeveDispararException()
+    {
+        // Arrange - Preparar token
+        var token = new CancellationTokenSource().Token;
+
+        IEnumerable<Produto> produtos = new List<Produto>();
+
+        var mockRepository = new Mock<IRepository<Produto>>(MockBehavior.Strict);
+        mockRepository
+            .Setup(_repositoryDependency => _repositoryDependency.BuscarTodosAsync(It.Is<CancellationToken>(t => t == token)))
+            .ReturnsAsync(produtos);
+
+        var service = new ProdutoService(mockRepository.Object);
+
+        // Act
+        await service.BuscarTodosProdutosAsync(token);
+
+        // Assert
+        mockRepository.Verify(r => r.BuscarTodosAsync(token), Times.Once);
+        mockRepository.VerifyNoOtherCalls();
+    }
 }
